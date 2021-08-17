@@ -1,7 +1,8 @@
 {
-  "name": "--libraryname--",
-  "version": "0.0.0",
-  "description": "",
+  "name": "ts-axios",
+  "version": "1.0.0",
+  "description": "学习 ts",
+  "main": "index.js",
   "keywords": [],
   "main": "dist/--libraryname--.umd.js",
   "module": "dist/--libraryname--.es5.js",
@@ -9,15 +10,16 @@
   "files": [
     "dist"
   ],
-  "author": "--username-- <--usermail-->",
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
   "license": "MIT",
   "engines": {
     "node": ">=6.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tangxve/ts-axios.git"
+  },
+  "author": "",
+  "license": "ISC",
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
@@ -117,5 +119,9 @@
     "tslint-config-standard": "^8.0.1",
     "typedoc": "^0.12.0",
     "typescript": "^3.0.3"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/tangxve/ts-axios/issues"
+  },
+  "homepage": "https://github.com/tangxve/ts-axios#readme"
 }
