@@ -30,7 +30,7 @@ export interface AxiosResponse {
   statusText: string
   headers: any
   config: AxiosRequestConfig
-  requset: any
+  request: any
 }
 
 export interface AxiosPromise extends Promise<AxiosResponse> {}

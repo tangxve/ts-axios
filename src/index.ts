@@ -1,15 +1,15 @@
-import { AxiosRequestConfig } from './types'
+import { AxiosPromise, AxiosRequestConfig } from './types'
 import xhr from './xhr'
 import { buildURL } from './helpers/url'
 import { transformRequest } from './helpers/data'
 import { processHeaders } from './helpers/header'
 
-function axios(config: AxiosRequestConfig): void {
+function axios(config: AxiosRequestConfig): AxiosPromise {
   // 处理 config
   processConfig(config)
 
   // 发送请求
-  xhr(config)
+  return xhr(config)
 }
 
 // 发送 xhr 之前对 config 做处理 void 没有任何类型

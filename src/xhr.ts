@@ -1,4 +1,4 @@
-import { AxiosPromise, AxiosRequestConfig } from './types'
+import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from './types'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise(resolve => {
@@ -17,7 +17,23 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       if (request.readyState !== 4) {
         return
       }
-      // todo
+
+      // 获取响应header
+      const responseHeaders = request.getAllResponseHeaders()
+
+      // 获取响应data
+      const responseData = responseType !== 'text' ? request.response : request.responseType
+
+      const response: AxiosResponse = {
+        data: responseData,
+        headers: responseHeaders,
+        status: request.status,
+        statusText: request.statusText,
+        config,
+        request
+      }
+
+      resolve(response)
     }
 
     // 设置 header
