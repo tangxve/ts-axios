@@ -1,4 +1,5 @@
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from './types'
+import { parseHeaders } from './helpers/header'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise(resolve => {
@@ -6,20 +7,17 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     const request = new XMLHttpRequest()
 
-    // 设置响应类型
-    if (responseType) {
-      request.responseType = responseType
-    }
-
+    // 初始化一个请求
     request.open(method.toUpperCase(), url, true)
 
+    // 状态变化时候回调
     request.onreadystatechange = function handleLoad() {
       if (request.readyState !== 4) {
         return
       }
 
       // 获取响应header
-      const responseHeaders = request.getAllResponseHeaders()
+      const responseHeaders = parseHeaders(request.getAllResponseHeaders())
 
       // 获取响应data
       const responseData = responseType !== 'text' ? request.response : request.responseType
@@ -36,6 +34,11 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       resolve(response)
     }
 
+    // 设置响应类型
+    if (responseType) {
+      request.responseType = responseType
+    }
+
     // 设置 header
     Object.keys(headers).forEach(name => {
       // 如果没有date 就删除 content-type
@@ -46,6 +49,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       }
     })
 
+    // 发送请求
     request.send(data)
   })
 }
