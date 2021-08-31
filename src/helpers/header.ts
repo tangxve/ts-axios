@@ -28,7 +28,6 @@ export function processHeaders(headers: any, data: any): any {
 }
 
 // 处理响应头 header
-
 export function parseHeaders(headers: string): any {
   // 如果没有默认返回空对象
   let parsed = Object.create(null)
