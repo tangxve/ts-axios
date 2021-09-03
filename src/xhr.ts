@@ -1,5 +1,6 @@
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from './types'
 import { parseHeaders } from './helpers/header'
+import { createErroe } from './helpers/error'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
@@ -64,21 +65,28 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     // 网络异常错误处理
     request.onerror = function handleError() {
-      reject(new Error('Network Error'))
+      reject(createErroe('Network Error', config, null, request))
     }
 
     // 超时错误处理
     request.ontimeout = function handleTimeout() {
-      reject(new Error(`超过 ${timeout}ms 的超时时间`))
+      reject(
+        createErroe(
+          `超过 ${timeout}ms 的超时时间`,
+          config,
+          'ECONNABORTED', // 被终止
+          request
+        )
+      )
     }
 
     // 处理返回结果
-    function handleResponse(res: AxiosResponse) {
-      if (res.status >= 200 && res.status < 300) {
-        resolve(res)
+    function handleResponse(response: AxiosResponse) {
+      if (response.status >= 200 && response.status < 300) {
+        resolve(response)
       } else {
         // 处理非200 状态码
-        reject(new Error(`请求失败，状态码：${res.status}`))
+        reject(createErroe(`请求失败，状态码：${response.status}`, config, null, request, response))
       }
     }
 
