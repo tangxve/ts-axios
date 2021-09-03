@@ -15,3 +15,15 @@ export function isDate(val: any): val is Date {
 export function isPlainObject(val: any): val is Object {
   return toString.call(val) === '[object Object]'
 }
+
+// 混合对象
+// ts 泛型 交叉类型
+export function extend<T, U>(to: T, from: U): T & U {
+  for (const key in from) {
+    // to 断言成 T & U 类型
+    // from 断言成 any
+    ;(to as T & U)[key] = from[key] as any
+  }
+
+  return to as T & U
+}
