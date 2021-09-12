@@ -5,7 +5,16 @@ import dispatchRequest from './dispatchRequest'
 
 export default class Axios {
   // 发送请求的方法
-  request(config: AxiosRequestConfig): AxiosPromise {
+  request(url: any, config?: any): AxiosPromise {
+    // 支持函数重载
+    if (typeof url === 'string') {
+      if (!config) {
+        config = {}
+      }
+      config.url = url
+    } else {
+      config = url
+    }
     return dispatchRequest(config)
   }
 
