@@ -77,3 +77,22 @@ export interface AxiosInstance extends Axios {
   // 支持函数重载
   <T = any>(url: string, config: AxiosRequestConfig): AxiosPromise<T>
 }
+
+// 拦截器泛型接口
+export interface AxiosInterceptorManager<T = any> {
+  // 创建拦截器 use 方法,返回拦截器 id，所以是 number 类型
+  use(resolved: ResolvedFn<T>, rejected: RejectedFn): number
+
+  // 根据id 删除一个拦截器
+  eject(id: number): void
+}
+
+export interface ResolvedFn<T> {
+  // 同步返回T，异步返回 Promise<T>
+  (val: T): T | Promise<T>
+}
+
+export interface RejectedFn {
+  // 返回参数error
+  (error: any): any
+}
