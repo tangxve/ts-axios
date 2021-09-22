@@ -1,9 +1,44 @@
 // 文件首字母大写 标识是一个类
 
-import { AxiosPromise, AxiosRequestConfig, Method } from '../types'
+import {
+  AxiosPromise,
+  AxiosRequestConfig,
+  AxiosResponse,
+  Method,
+  RejectedFn,
+  ResolvedFn
+} from '../types'
 import dispatchRequest from './dispatchRequest'
+// 这是一个泛型类，可以 new 的
+import InterceptorManager from './InterceptorManager'
+
+interface Interceptors {
+  // 请求拦截器
+  requset: InterceptorManager<AxiosRequestConfig>
+  // 响应拦截器
+  response: InterceptorManager<AxiosResponse>
+}
+
+interface PromiseChain<T> {
+  // 接受ResolvedFn 或者 dispatchRequest 方法 默认情况下
+  resolved: ResolvedFn<T> | ((config: AxiosRequestConfig) => AxiosPromise)
+  rejected?: RejectedFn
+}
 
 export default class Axios {
+  // 拦截器
+  interceptors: Interceptors
+
+  // 实例化的时候初始化拦截器
+  constructor() {
+    this.interceptors = {
+      // 请求拦截器
+      requset: new InterceptorManager<AxiosRequestConfig>(),
+      // 响应拦截器
+      response: new InterceptorManager<AxiosResponse>()
+    }
+  }
+
   // 发送请求的方法
   request(url: any, config?: any): AxiosPromise {
     // 支持函数重载
@@ -15,7 +50,38 @@ export default class Axios {
     } else {
       config = url
     }
-    return dispatchRequest(config)
+
+    // 拦截器链,一堆拦截器
+    const chain: PromiseChain<any>[] = [
+      // 默认一个初始值
+      {
+        // 默认发送请求
+        resolved: dispatchRequest,
+        rejected: undefined
+      }
+    ]
+
+    // 添加请求拦截器，先执行后添加的，再执行先添加的，添加到头部 unshift
+    this.interceptors.requset.forEach(interceptor => {
+      chain.unshift(interceptor)
+    })
+
+    // 添加响应拦截器，先执行先添加的，后执行后添加的。添加尾部 push
+    this.interceptors.response.forEach(interceptor => {
+      chain.push(interceptor)
+    })
+
+    let promise = Promise.resolve(config)
+
+    while (chain.length) {
+      // 获取当前拦截器
+      const { resolved, rejected } = chain.shift()! // 类型断言，不为空
+      promise = promise.then(resolved, resolved)
+    }
+
+    // return dispatchRequest(config)
+
+    return promise
   }
 
   get(url: string, config?: AxiosRequestConfig): AxiosPromise {
