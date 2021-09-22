@@ -14,7 +14,7 @@ import InterceptorManager from './InterceptorManager'
 
 interface Interceptors {
   // 请求拦截器
-  requset: InterceptorManager<AxiosRequestConfig>
+  request: InterceptorManager<AxiosRequestConfig>
   // 响应拦截器
   response: InterceptorManager<AxiosResponse>
 }
@@ -33,7 +33,7 @@ export default class Axios {
   constructor() {
     this.interceptors = {
       // 请求拦截器
-      requset: new InterceptorManager<AxiosRequestConfig>(),
+      request: new InterceptorManager<AxiosRequestConfig>(),
       // 响应拦截器
       response: new InterceptorManager<AxiosResponse>()
     }
@@ -62,7 +62,7 @@ export default class Axios {
     ]
 
     // 添加请求拦截器，先执行后添加的，再执行先添加的，添加到头部 unshift
-    this.interceptors.requset.forEach(interceptor => {
+    this.interceptors.request.forEach(interceptor => {
       chain.unshift(interceptor)
     })
 

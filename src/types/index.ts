@@ -52,7 +52,7 @@ export interface AxiosError extends Error {
 // axios 类型接口，类中的公共方法
 export interface Axios {
   interceptors: {
-    requset: AxiosInterceptorManager<AxiosRequestConfig>
+    request: AxiosInterceptorManager<AxiosRequestConfig>
     response: AxiosInterceptorManager<AxiosResponse>
   }
 
@@ -86,7 +86,7 @@ export interface AxiosInstance extends Axios {
 // 拦截器泛型接口
 export interface AxiosInterceptorManager<T = any> {
   // 创建拦截器 use 方法,返回拦截器 id，所以是 number 类型
-  use(resolved: ResolvedFn<T>, rejected: RejectedFn): number
+  use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
 
   // 根据id 删除一个拦截器
   eject(id: number): void
