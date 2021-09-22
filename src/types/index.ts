@@ -51,6 +51,11 @@ export interface AxiosError extends Error {
 
 // axios 类型接口，类中的公共方法
 export interface Axios {
+  interceptors: {
+    requset: AxiosInterceptorManager<AxiosRequestConfig>
+    response: AxiosInterceptorManager<AxiosResponse>
+  }
+
   // 传入的什么类型T，就返回什么类型T <T = any>: 泛型参数
   request<T = any>(config: AxiosRequestConfig): AxiosPromise<T>
 
