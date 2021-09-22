@@ -37,6 +37,8 @@ export default class Axios {
       // 响应拦截器
       response: new InterceptorManager<AxiosResponse>()
     }
+
+    console.log('this.interceptors', this.interceptors)
   }
 
   // 发送请求的方法
@@ -72,16 +74,34 @@ export default class Axios {
     })
 
     let promise = Promise.resolve(config)
-
+    // 实现链式调用
     while (chain.length) {
       // 获取当前拦截器
       const { resolved, rejected } = chain.shift()! // 类型断言，不为空
+
+      // 链式调用
       promise = promise.then(resolved, resolved)
     }
 
     // return dispatchRequest(config)
 
     return promise
+
+    /* 拦截器链式调用运行过程
+     // 多个拦截器
+     const testInterceptors= ['请求拦截2', '请求拦截2', 'send request', '响应拦截1', '响应拦截2']
+
+     // 链式调用
+     promise = testInterceptors
+     .then(resolved, resolved) // 请求拦截2
+     .then(resolved, resolved) // 请求拦截2
+     .then(resolved, resolved) // send request
+     .then(resolved, resolved) // 响应拦截1
+     .then(resolved, resolved) // 响应拦截2
+
+     // 返回结果
+     return promise
+     */
   }
 
   get(url: string, config?: AxiosRequestConfig): AxiosPromise {
