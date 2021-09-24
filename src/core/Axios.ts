@@ -87,15 +87,15 @@ export default class Axios {
 
     return promise
 
-    /* 拦截器链式调用运行过程
+    /* 拦截器链式调用简单过程
      // 多个拦截器
-     const testInterceptors= ['请求拦截2', '请求拦截2', 'send request', '响应拦截1', '响应拦截2']
+     const testInterceptors= ['请求拦截2', '请求拦截1', 'dispatchRequest', '响应拦截1', '响应拦截2']
 
      // 链式调用
      promise = testInterceptors
      .then(resolved, resolved) // 请求拦截2
-     .then(resolved, resolved) // 请求拦截2
-     .then(resolved, resolved) // send request
+     .then(resolved, resolved) // 请求拦截1
+     .then(resolved, resolved) // dispatchRequest
      .then(resolved, resolved) // 响应拦截1
      .then(resolved, resolved) // 响应拦截2
 
