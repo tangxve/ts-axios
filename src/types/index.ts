@@ -26,6 +26,9 @@ export interface AxiosRequestConfig {
   // 响应的类型
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+
+  // 字符串索引签名 可以通过config[key] 索引方式访问
+  [propName: string]: any
 }
 
 // T = any 默认是any，传入什么类型，返回什么类型
@@ -51,6 +54,8 @@ export interface AxiosError extends Error {
 
 // axios 类型接口，类中的公共方法
 export interface Axios {
+  defaults?: AxiosRequestConfig
+
   interceptors: {
     request: AxiosInterceptorManager<AxiosRequestConfig>
     response: AxiosInterceptorManager<AxiosResponse>
