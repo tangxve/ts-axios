@@ -1,5 +1,4 @@
 // 文件首字母大写 标识是一个类
-
 import {
   AxiosPromise,
   AxiosRequestConfig,
@@ -11,6 +10,7 @@ import {
 import dispatchRequest from './dispatchRequest'
 // 这是一个泛型类，可以 new 的
 import InterceptorManager from './InterceptorManager'
+import mergeConfig from './mergeConfig'
 
 interface Interceptors {
   // 请求拦截器
@@ -55,6 +55,7 @@ export default class Axios {
       config = url
     }
 
+    config = mergeConfig(this.defaults, config)
     // 拦截器链,一堆拦截器
     const chain: PromiseChain<any>[] = [
       // 默认一个初始值

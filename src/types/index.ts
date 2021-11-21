@@ -1,5 +1,3 @@
-import * as stream from 'stream'
-
 export type Method =
   | 'get'
   | 'GET'
