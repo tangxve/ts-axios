@@ -1,8 +1,8 @@
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types'
 import xhr from './xhr'
 import { buildURL } from '../helpers/url'
-import { transformRequest, transformResponse } from '../helpers/data'
-import { flattenHeaders, processHeaders } from '../helpers/header'
+import { flattenHeaders } from '../helpers/header'
+import transform from './transform'
 
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
   // 处理 config
@@ -16,8 +16,8 @@ export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromis
 function processConfig(config: AxiosRequestConfig): void {
   config.url = transformURL(config)
   // 先处理 headers 再处理 data，transformRequestData 方法会改写 data
-  config.headers = transformHeaders(config)
-  config.data = transformRequestData(config)
+  // config.headers = transformHeaders(config)
+  config.data = transform(config.data, config.headers, config.transformRequset)
   config.headers = flattenHeaders(config.headers, config.method!)
 }
 
@@ -29,22 +29,26 @@ function transformURL(config: AxiosRequestConfig): string {
   return buildURL(url!, params)
 }
 
-// 处理请求头 body 数据
-function transformRequestData(config: AxiosRequestConfig): any {
-  return transformRequest(config.data)
-}
-
-// 处理请求头 headers
-function transformHeaders(config: AxiosRequestConfig): any {
-  // headers 要给个默认值，处理header方法判断了header
-  const { headers = {}, data } = config
-
-  return processHeaders(headers, data)
-}
-
 // 处理响应头 data
 function transformResponseData(res: AxiosResponse): AxiosResponse {
-  res.data = transformResponse(res.data)
+  res.data = transform(res.data, res.headers, res.config.transformResponse)
 
   return res
 }
+
+/*
+ 统一由 transform 方法执行, 下面方法用不到
+ // 处理请求头 body 数据
+ function transformRequestData(config: AxiosRequestConfig): any {
+ return transformRequest(config.data)
+ }
+
+ // 处理请求头 headers
+ function transformHeaders(config: AxiosRequestConfig): any {
+ // headers 要给个默认值，处理header方法判断了header
+ const { headers = {}, data } = config
+
+ return processHeaders(headers, data)
+ }
+
+ */
