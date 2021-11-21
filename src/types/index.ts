@@ -52,7 +52,7 @@ export interface AxiosError extends Error {
 
 // axios 类型接口，类中的公共方法
 export interface Axios {
-  defaults?: AxiosRequestConfig
+  defaults: AxiosRequestConfig
 
   interceptors: {
     request: AxiosInterceptorManager<AxiosRequestConfig>
