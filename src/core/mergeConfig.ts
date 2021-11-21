@@ -2,7 +2,7 @@ import { AxiosRequestConfig } from '../types'
 import { isPlainObject, deepMerge } from '../helpers/util'
 
 // 默认合并策略 优先取 val2
-function defaultStart(val1: any, val2: any): any {
+function defaultStrat(val1: any, val2: any): any {
   return typeof val2 !== 'undefined' ? val2 : val1
 }
 
@@ -27,17 +27,17 @@ function deepMergeStrat(val1: any, val2: any): any {
 }
 
 // 策略函数 map
-const starts = Object.create(null)
+const strats = Object.create(null)
 const stratKeysFromVal2 = ['url', 'params', 'data']
 // 这些属性默认使用
 stratKeysFromVal2.forEach(key => {
-  starts[key] = fromVal2Start
+  strats[key] = fromVal2Start
 })
 
 const stratKeysDeepMerge = ['headers']
 
 stratKeysDeepMerge.forEach(key => {
-  starts[key] = deepMergeStrat
+  strats[key] = deepMergeStrat
 })
 
 export default function mergeConfig(
@@ -47,6 +47,8 @@ export default function mergeConfig(
   if (!config2) {
     config2 = {}
   }
+
+  const config = Object.create(null)
 
   for (let key in config2) {
     mergeField(key)
@@ -58,11 +60,9 @@ export default function mergeConfig(
     }
   }
 
-  const config = Object.create(null)
-
   function mergeField(key: string): void {
-    const start = starts[key] || defaultStart
-    config[key] = start(config1[key], config2![key])
+    const strat = strats[key] || defaultStrat
+    config[key] = strat(config1[key], config2![key])
   }
 
   return config
