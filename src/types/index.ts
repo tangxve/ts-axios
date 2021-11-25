@@ -88,6 +88,11 @@ export interface AxiosInstance extends Axios {
   <T = any>(url: string, config: AxiosRequestConfig): AxiosPromise<T>
 }
 
+// axios 静态方法
+export interface AxiosStatic extends AxiosInstance {
+  create(config?: AxiosRequestConfig): AxiosInstance
+}
+
 // 拦截器泛型接口
 export interface AxiosInterceptorManager<T = any> {
   // 创建拦截器 use 方法,返回拦截器 id，所以是 number 类型
