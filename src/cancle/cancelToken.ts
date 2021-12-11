@@ -1,4 +1,4 @@
-import { CancelExecutor } from '../types'
+import { Canceler, CancelExecutor, CancelTokenSource } from '../types'
 
 interface ResolvePromise {
   (reason?: string): void
@@ -26,5 +26,18 @@ export default class CancelToken {
       // 修改状态 等待中 =》 成功
       resolvePromise(this.reason)
     })
+  }
+
+  static source(): CancelTokenSource {
+    let cancel!: Canceler
+
+    const token = new CancelToken(c => {
+      // 赋值，外面通过 source 方法得到
+      cancel = c
+    })
+    return {
+      cancel,
+      token
+    }
   }
 }
