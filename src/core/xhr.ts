@@ -4,7 +4,7 @@ import { createErroe } from '../helpers/error'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
-    const { data = null, url, method = 'get', headers, responseType, timeout } = config
+    const { data = null, url, method = 'get', headers, responseType, timeout, cancelToken } = config
 
     const request = new XMLHttpRequest()
 
@@ -88,6 +88,14 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         // 处理非200 状态码
         reject(createErroe(`请求失败，状态码：${response.status}`, config, null, request, response))
       }
+    }
+
+    if (cancelToken) {
+      // 外部如果调用 cancelToken 实例的方法，下面就执行，然后取消请求
+      cancelToken.promise.then(reason => {
+        request.abort()
+        reject(reason)
+      })
     }
 
     // 发送请求

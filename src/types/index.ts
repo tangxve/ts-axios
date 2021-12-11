@@ -26,6 +26,7 @@ export interface AxiosRequestConfig {
   timeout?: number
   transformRequest?: AxiosTransformer | Array<AxiosTransformer>
   transformResponse?: AxiosTransformer | Array<AxiosTransformer>
+  cancelToken?: CancelToken
 
   // 字符串索引签名 可以通过config[key] 索引方式访问
   [propName: string]: any
@@ -114,4 +115,21 @@ export interface RejectedFn {
 
 export interface AxiosTransformer {
   (data: any, headers?: any): any
+}
+
+// 取消接口
+export interface CancelToken {
+  promise: Promise<string>
+  // promise 返回的参数
+  reason?: string
+}
+
+// 取消方法的参数
+export interface Canceler {
+  (message?: string): void
+}
+
+// CancelToken 构造函数参数的类型
+export interface CancelExecutor {
+  (cancle: Canceler): void
 }
