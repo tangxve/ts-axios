@@ -32,7 +32,13 @@ export default class CancelToken {
     })
   }
 
-  static source(): CancelTokenSource {
+  throwIfRequested() {
+    if (this.reason) {
+      throw this.reason
+    }
+  }
+
+  static source(): { cancel: Canceler; token: CancelToken } {
     let cancel!: Canceler
 
     const token = new CancelToken(c => {

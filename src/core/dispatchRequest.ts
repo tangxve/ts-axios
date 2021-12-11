@@ -5,6 +5,9 @@ import { flattenHeaders } from '../helpers/header'
 import transform from './transform'
 
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
+  // 发送请求判断是否有取消
+  throwIfCancellationRequested(config)
+
   // 处理 config
   processConfig(config)
 
@@ -34,6 +37,13 @@ function transformResponseData(res: AxiosResponse): AxiosResponse {
   res.data = transform(res.data, res.headers, res.config.transformResponse)
 
   return res
+}
+
+// 如果默认是需求接口，就不发送请求
+function throwIfCancellationRequested(config: AxiosRequestConfig): void {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested()
+  }
 }
 
 /*

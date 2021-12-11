@@ -126,6 +126,8 @@ export interface CancelToken {
   promise: Promise<Cancel>
   // promise 返回的参数
   reason?: Cancel
+
+  throwIfRequested(): void
 }
 
 // 取消方法的参数
@@ -139,8 +141,8 @@ export interface CancelExecutor {
 }
 
 export interface CancelTokenSource {
-  token: CancelToken
   cancel: Canceler
+  token: CancelToken
 }
 
 // 类 类型
